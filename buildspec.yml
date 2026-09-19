@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 195231313161.dkr.ecr.ap-southeast-2.amazonaws.com
+
+  build:
+    commands:
+      - echo Building Docker image...
+      - docker build -t my-web .
+      - docker tag my-web:latest 195231313161.dkr.ecr.ap-southeast-2.amazonaws.com/my-web:latest
+
+  post_build:
+    commands:
+      - echo Pushing Docker image to ECR...
+      - docker push 195231313161.dkr.ecr.ap-southeast-2.amazonaws.com/my-web:latest
+      - echo Build completed successfully.
