@@ -29,6 +29,10 @@ resource "aws_iam_instance_profile" "ec2_profile" {
   role = aws_iam_role.ec2_ecr_role.name
 }
 
+resource "aws_iam_role_policy_attachment" "ssm_core" {
+  role       = aws_iam_role.ec2_ecr_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
 
 # 1. Create the policy allowing access to your GitHub CodeConnection
 resource "aws_iam_policy" "codebuild_connections_policy" {

@@ -39,7 +39,28 @@ pipeline {
                 sh "docker push ${ECR_REGISTRY}/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
             }
         }
+    
+       stage('Deploy to Website EC2') {
+             steps {
+                  echo 'Deploying latest image to Website EC2...'
+
+                  sh """
+                  aws ssm send-command \
+                  --instance-ids i-04a752c91e066a31e \
+                  --document-name "AWS-RunShellScript" \
+                  --parameters 'commands=[
+                  "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}",
+                  "docker pull ${ECR_REGISTRY}/${IMAGE_REPO_NAME}:${IMAGE_TAG}",
+                  "docker stop my-web || true",
+                  "docker rm my-web || true",
+                  "docker run -d --restart unless-stopped -p 80:80 --name my-web ${ECR_REGISTRY}/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+                  ]' \
+                  --region ${AWS_REGION}
+                  """
+             }
+         }
     }
+
 
     post {
         success {

@@ -1,7 +1,7 @@
 resource "aws_instance" "jenkins_server" {
   ami                  = "ami-0e045913e61b9cef6"
   instance_type        = "t3.micro"
-  iam_instance_profile = aws_iam_instance_profile.ec2_profile.name # Reuses your ECR access role
+  iam_instance_profile = aws_iam_instance_profile.jenkins_profile.name
 
   subnet_id                   = aws_subnet.main.id
   vpc_security_group_ids      = [aws_security_group.web_ssh_access.id]
