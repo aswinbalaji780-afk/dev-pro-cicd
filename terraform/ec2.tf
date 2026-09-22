@@ -8,6 +8,12 @@ resource "aws_instance" "web_server" {
   associate_public_ip_address = true
   key_name                    = aws_key_pair.devops_key.key_name
 
+  root_block_device {
+    volume_size           = 15    # 15 GB of storage space
+    volume_type           = "gp3" # General Purpose SSD (fast and free-tier safe)
+    delete_on_termination = true
+  }
+
   user_data = <<-EOF
   #!/bin/bash
 
