@@ -39,3 +39,12 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.swp
+
+
+# Jenkins
+jenkins_home/
+*.log
+
+
+# Docker
+*.tar
